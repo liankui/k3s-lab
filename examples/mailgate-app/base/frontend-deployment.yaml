@@ -17,6 +17,8 @@ spec:
         - name: mailgate-frontend
           image: mailgate/mailgate-frontend:latest-arm64
           imagePullPolicy: IfNotPresent
+          command:
+            - caddy
           args:
             - run
             - --config

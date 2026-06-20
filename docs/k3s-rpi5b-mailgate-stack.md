@@ -38,6 +38,7 @@
 - 前端监听：`80`，对外入口在 Ingress 上暴露
 - 前端通过 Caddy 把 `/mailgate/v1` 反代到后端
 - 后端使用 SQLite，数据写入 `/app/data/mailgate.db`
+- 前端部署需要显式保留 `caddy` 入口命令，再通过参数传入 `run --config /bootstrap/Caddyfile --adapter caddyfile`
 
 ### 4. 安装这个应用
 
