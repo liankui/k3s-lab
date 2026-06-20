@@ -55,7 +55,13 @@ kubectl get svc -n monitoring
 - Grafana: `http://grafana.rpi5b.local`
 - Prometheus: `http://prometheus.rpi5b.local`
 
-如果当前电脑没有 DNS 解析，先在本机 `/etc/hosts` 加入 Pi 的地址映射。
+如果当前电脑没有 DNS 解析，先在本机 `/etc/hosts` 加入地址映射：
+
+```text
+100.109.40.53 grafana.rpi5b.local prometheus.rpi5b.local
+```
+
+如果你是在同一局域网里访问，也可以把这里替换成树莓派的内网 IP。
 
 ### 5. 获取 Grafana 密码
 
