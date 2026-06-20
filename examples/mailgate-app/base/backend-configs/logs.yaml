@@ -1,0 +1,9 @@
+logs:
+  level: debug
+  encode: console
+  file:
+    path: ./logs/app.log
+    maxSize: 100
+    maxBackups: 10
+    maxAge: 28
+    encode: console

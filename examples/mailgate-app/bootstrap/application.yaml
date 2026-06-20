@@ -1,0 +1,20 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: mailgate
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: git://192.168.31.102:9418/k3s-lab-mirror.git
+    targetRevision: main
+    path: examples/mailgate-app/base
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: mailgate
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

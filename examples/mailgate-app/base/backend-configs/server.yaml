@@ -1,0 +1,8 @@
+server:
+  httpAddr: ":30101"
+  grpcAddr: ":30102"
+  debugAddr: ":30103"
+mailgateServer:
+  httpAddr: ":31101"
+  grpcAddr: ":31102"
+  debugAddr: ":31103"

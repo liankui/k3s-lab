@@ -1,0 +1,5 @@
+redis:
+  addresses:
+    - mailgate-redis:6379
+  maxIdleConnections: 30
+  password: mailgate-redis

@@ -1,0 +1,7 @@
+storage:
+  vendor: minio
+  endpoint: mailgate-minio:9000
+  region: us-east-1
+  accessKey: root
+  secretKey: mailgate-minio
+  bucketName: mailgate

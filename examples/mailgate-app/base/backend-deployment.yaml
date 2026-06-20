@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mailgate-server
+  namespace: mailgate
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mailgate-server
+  template:
+    metadata:
+      labels:
+        app: mailgate-server
+    spec:
+      containers:
+        - name: mailgate-server
+          image: mailgate/mailgate-server:latest-arm64
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 31101
+            - name: grpc
+              containerPort: 31102
+            - name: debug
+              containerPort: 31103
+          env:
+            - name: TZ
+              value: Asia/Shanghai
+          volumeMounts:
+            - name: backend-configs
+              mountPath: /app/configs
+              readOnly: true
+            - name: backend-data
+              mountPath: /app/data
+          readinessProbe:
+            httpGet:
+              path: /readyz
+              port: debug
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            timeoutSeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /livez
+              port: debug
+            initialDelaySeconds: 20
+            periodSeconds: 20
+            timeoutSeconds: 5
+      volumes:
+        - name: backend-configs
+          configMap:
+            name: mailgate-backend-configs
+        - name: backend-data
+          persistentVolumeClaim:
+            claimName: mailgate-data

@@ -1,0 +1,4 @@
+db:
+  driver: sqlite
+  dsn: file:data/mailgate.db?cache=shared&_foreign_keys=on&_journal_mode=WAL
+  debug: false

@@ -1,0 +1,28 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: mailgate
+resources:
+  - namespace.yaml
+  - pvc.yaml
+  - backend-deployment.yaml
+  - backend-service.yaml
+  - frontend-deployment.yaml
+  - frontend-service.yaml
+  - ingress.yaml
+configMapGenerator:
+  - name: mailgate-backend-configs
+    files:
+      - db.yaml=backend-configs/db.yaml
+      - idgen.yaml=backend-configs/idgen.yaml
+      - logs.yaml=backend-configs/logs.yaml
+      - metrics.yaml=backend-configs/metrics.yaml
+      - redis.yaml=backend-configs/redis.yaml
+      - sd.yaml=backend-configs/sd.yaml
+      - server.yaml=backend-configs/server.yaml
+      - storage.yaml=backend-configs/storage.yaml
+      - tracing.yaml=backend-configs/tracing.yaml
+  - name: mailgate-frontend-caddy
+    files:
+      - Caddyfile=frontend-caddy/Caddyfile
+generatorOptions:
+  disableNameSuffixHash: true

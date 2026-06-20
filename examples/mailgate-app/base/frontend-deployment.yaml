@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mailgate-frontend
+  namespace: mailgate
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mailgate-frontend
+  template:
+    metadata:
+      labels:
+        app: mailgate-frontend
+    spec:
+      containers:
+        - name: mailgate-frontend
+          image: mailgate/mailgate-frontend:latest-arm64
+          imagePullPolicy: IfNotPresent
+          args:
+            - run
+            - --config
+            - /bootstrap/Caddyfile
+            - --adapter
+            - caddyfile
+          ports:
+            - name: http
+              containerPort: 80
+          env:
+            - name: APP_HOST
+              value: mailgate-server
+            - name: API_PREFIX
+              value: /mailgate/v1
+          volumeMounts:
+            - name: frontend-caddy
+              mountPath: /bootstrap/Caddyfile
+              subPath: Caddyfile
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            timeoutSeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+            initialDelaySeconds: 20
+            periodSeconds: 20
+            timeoutSeconds: 5
+      volumes:
+        - name: frontend-caddy
+          configMap:
+            name: mailgate-frontend-caddy

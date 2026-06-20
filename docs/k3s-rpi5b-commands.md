@@ -60,6 +60,19 @@ argocd app diff <app-name>
 argocd app history <app-name>
 ```
 
+### 7. Mailgate
+
+```bash
+kubectl get pods -n mailgate
+kubectl get svc -n mailgate
+kubectl get ingress -n mailgate
+kubectl get pvc -n mailgate
+kubectl logs -n mailgate deploy/mailgate-server
+kubectl logs -n mailgate deploy/mailgate-frontend
+argocd app diff mailgate
+argocd app sync mailgate
+```
+
 ## 命名速查
 
 ### 1. 常见 Kubernetes 资源简称
@@ -102,3 +115,4 @@ argocd app history <app-name>
 - 如果要重装或修环境，先看 [`k3s-rpi5b-setup.md`](./k3s-rpi5b-setup.md)。
 - 如果要装监控栈，先看 [`k3s-rpi5b-monitoring-stack.md`](./k3s-rpi5b-monitoring-stack.md)。
 - 如果要做 GitOps 部署，先看 [`k3s-rpi5b-argocd-stack.md`](./k3s-rpi5b-argocd-stack.md) 和 [`k3s-rpi5b-argocd-operations.md`](./k3s-rpi5b-argocd-operations.md)。
+- 如果要部署 Mailgate 第二个 GitOps 应用，先看 [`k3s-rpi5b-mailgate-stack.md`](./k3s-rpi5b-mailgate-stack.md) 和 [`k3s-rpi5b-mailgate-operations.md`](./k3s-rpi5b-mailgate-operations.md)。

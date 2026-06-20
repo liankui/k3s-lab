@@ -1,0 +1,19 @@
+:80 {
+	log {
+		output stdout
+		format console
+	}
+
+	encode zstd gzip
+
+	@api path {$API_PREFIX} {$API_PREFIX}/*
+	handle @api {
+		reverse_proxy {$APP_HOST}:31101
+	}
+
+	handle {
+		root * /usr/share/caddy
+		try_files {path} {path}/ /index.html
+		file_server
+	}
+}
