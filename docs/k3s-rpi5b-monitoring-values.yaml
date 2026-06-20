@@ -1,0 +1,71 @@
+fullnameOverride: monitoring
+
+grafana:
+  enabled: true
+  persistence:
+    enabled: true
+    type: sts
+    storageClassName: local-path
+    accessModes:
+      - ReadWriteOnce
+    size: 1Gi
+  ingress:
+    enabled: true
+    ingressClassName: traefik
+    hosts:
+      - grafana.rpi5b.local
+    path: /
+    pathType: Prefix
+  resources:
+    requests:
+      cpu: 50m
+      memory: 128Mi
+    limits:
+      cpu: 200m
+      memory: 256Mi
+
+prometheus:
+  enabled: true
+  prometheusSpec:
+    retention: 7d
+    resources:
+      requests:
+        cpu: 100m
+        memory: 256Mi
+      limits:
+        cpu: 300m
+        memory: 512Mi
+    storageSpec:
+      volumeClaimTemplate:
+        spec:
+          storageClassName: local-path
+          accessModes: ["ReadWriteOnce"]
+          resources:
+            requests:
+              storage: 2Gi
+  ingress:
+    enabled: true
+    ingressClassName: traefik
+    hosts:
+      - prometheus.rpi5b.local
+    paths:
+      - /
+    pathType: Prefix
+
+alertmanager:
+  enabled: true
+
+nodeExporter:
+  enabled: true
+
+defaultRules:
+  create: true
+
+prometheusOperator:
+  resources:
+    requests:
+      cpu: 50m
+      memory: 128Mi
+    limits:
+      cpu: 200m
+      memory: 256Mi

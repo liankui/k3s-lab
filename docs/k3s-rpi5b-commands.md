@@ -39,6 +39,15 @@ sudo systemctl restart k3s
 sudo /usr/local/bin/k3s-uninstall.sh
 ```
 
+### 5. 监控栈
+
+```bash
+kubectl get pods -n monitoring
+kubectl get ingress -n monitoring
+kubectl get pvc -n monitoring
+kubectl get secret -n monitoring monitoring-grafana -o jsonpath="{.data.admin-password}" | base64 -d; echo
+```
+
 ## 命名速查
 
 ### 1. 常见 Kubernetes 资源简称
@@ -79,4 +88,4 @@ sudo /usr/local/bin/k3s-uninstall.sh
 - 这份文档只收日常高频命令，不重复安装步骤。
 - 如果要部署新应用，先看 [`k3s-rpi5b-first-deploy-checklist.md`](./k3s-rpi5b-first-deploy-checklist.md)。
 - 如果要重装或修环境，先看 [`k3s-rpi5b-setup.md`](./k3s-rpi5b-setup.md)。
-
+- 如果要装监控栈，先看 [`k3s-rpi5b-monitoring-stack.md`](./k3s-rpi5b-monitoring-stack.md)。
