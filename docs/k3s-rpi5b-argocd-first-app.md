@@ -83,6 +83,15 @@ git://192.168.31.102:9418/k3s-lab-mirror.git
 
 这个 mirror 是从当前仓库同步出来的，专门用来让 repo-server 在这套网络里稳定拉取。
 
+后续如果你又改了 `examples/argocd-first-app/base/`，先在树莓派上刷新 mirror，再让 Argo CD 同步：
+
+```bash
+git -C /tmp/k3s-lab-mirror.git fetch origin main
+git -C /tmp/k3s-lab-mirror.git update-server-info
+```
+
+如果你想让这台 Pi 的 mirror 长期跟着 GitHub 走，也可以把它当成一个本地只读镜像来维护。
+
 ## 4. 验证页面
 
 查看 Pod 和 Ingress：
