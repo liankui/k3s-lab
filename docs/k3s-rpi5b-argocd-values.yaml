@@ -1,0 +1,12 @@
+configs:
+  params:
+    server.insecure: true
+
+server:
+  ingress:
+    enabled: true
+    ingressClassName: traefik
+    hostname: argocd.rpi5b.local
+    path: /
+    pathType: Prefix
+    tls: false

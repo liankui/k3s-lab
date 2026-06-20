@@ -48,6 +48,18 @@ kubectl get pvc -n monitoring
 kubectl get secret -n monitoring monitoring-grafana -o jsonpath="{.data.admin-password}" | base64 -d; echo
 ```
 
+### 6. Argo CD
+
+```bash
+kubectl get pods -n argocd
+kubectl get ingress -n argocd
+kubectl get secret -n argocd argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d; echo
+argocd app list
+argocd app sync <app-name> --prune --self-heal
+argocd app diff <app-name>
+argocd app history <app-name>
+```
+
 ## 命名速查
 
 ### 1. 常见 Kubernetes 资源简称
@@ -89,3 +101,4 @@ kubectl get secret -n monitoring monitoring-grafana -o jsonpath="{.data.admin-pa
 - 如果要部署新应用，先看 [`k3s-rpi5b-first-deploy-checklist.md`](./k3s-rpi5b-first-deploy-checklist.md)。
 - 如果要重装或修环境，先看 [`k3s-rpi5b-setup.md`](./k3s-rpi5b-setup.md)。
 - 如果要装监控栈，先看 [`k3s-rpi5b-monitoring-stack.md`](./k3s-rpi5b-monitoring-stack.md)。
+- 如果要做 GitOps 部署，先看 [`k3s-rpi5b-argocd-stack.md`](./k3s-rpi5b-argocd-stack.md) 和 [`k3s-rpi5b-argocd-operations.md`](./k3s-rpi5b-argocd-operations.md)。

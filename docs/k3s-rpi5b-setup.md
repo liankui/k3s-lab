@@ -81,4 +81,5 @@ sudo /usr/local/bin/k3s-uninstall.sh
 - Docker Hub 和 `registry.k8s.io` 在这条网络上不稳定，所以用了镜像源配置。
 - 验证通过版本：`v1.35.5+k3s1`
 - 首次部署看 [`k3s-rpi5b-first-deploy-checklist.md`](./k3s-rpi5b-first-deploy-checklist.md)。
+- 如果后面想把部署流程改成可重复的 GitOps，看 [`k3s-rpi5b-argocd-stack.md`](./k3s-rpi5b-argocd-stack.md)。
 - 日常排障和命名速查请看 [`k3s-rpi5b-commands.md`](./k3s-rpi5b-commands.md)。

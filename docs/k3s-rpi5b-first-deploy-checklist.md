@@ -81,5 +81,5 @@ sudo k3s kubectl delete namespace demo
 ## 备注
 
 - 如果要对外暴露 HTTPS，再加 `cert-manager`。
-- 如果后面要做多服务管理，再考虑 GitOps。
+- 如果后面要做多服务管理，优先看 Argo CD GitOps：[`k3s-rpi5b-argocd-stack.md`](./k3s-rpi5b-argocd-stack.md)。
 - 日常排障和命名速查请看 [`k3s-rpi5b-commands.md`](./k3s-rpi5b-commands.md)。
