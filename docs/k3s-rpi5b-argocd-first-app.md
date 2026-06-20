@@ -21,6 +21,7 @@
 
 - Argo CD 已安装并且 `argocd-server` 可访问
 - 这份仓库已经推送到 GitHub
+- 这台 Pi 已经启动了一个本地 Git mirror，Argo CD 从这里拉取示例仓库
 - `hello.rpi5b.local` 可以解析到树莓派地址，或者你愿意用 `curl -H 'Host: hello.rpi5b.local'`
 
 如果你没有本机 DNS，可以先在访问端 `/etc/hosts` 加一条：
@@ -73,6 +74,14 @@ kubectl describe application hello-web -n argocd
 - `hello-web` 这个 Application 已创建
 - `demo-gitops` 命名空间会被自动生成
 - `hello-web` 的资源开始同步到集群
+
+如果你的集群里直接拉 GitHub 会超时，就像这台 lab 一样，可以把 `bootstrap/application.yaml` 里的 `repoURL` 指向这台 Pi 的本地 Git mirror：
+
+```text
+git://192.168.31.102:9418/k3s-lab-mirror.git
+```
+
+这个 mirror 是从当前仓库同步出来的，专门用来让 repo-server 在这套网络里稳定拉取。
 
 ## 4. 验证页面
 
