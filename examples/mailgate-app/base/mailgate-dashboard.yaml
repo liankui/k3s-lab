@@ -12,7 +12,7 @@ data:
       "annotations": {
         "list": []
       },
-      "description": "Mailgate operations overview: health first, then trends, then method drill-down.",
+      "description": "Mailgate operations overview: health first, then latency and resource signals, then method drill-down.",
       "editable": true,
       "fiscalYearStartMonth": 0,
       "graphTooltip": 1,
@@ -123,7 +123,7 @@ data:
           "fieldConfig": {
             "defaults": {
               "decimals": 2,
-              "unit": "short"
+              "unit": "ms"
             },
             "overrides": []
           },
@@ -218,6 +218,198 @@ data:
           },
           "fieldConfig": {
             "defaults": {
+              "decimals": 2,
+              "unit": "ms"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 4,
+            "w": 6,
+            "x": 0,
+            "y": 5
+          },
+          "id": 5,
+          "options": {
+            "colorMode": "value",
+            "graphMode": "area",
+            "justifyMode": "auto",
+            "orientation": "auto",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "textMode": "auto"
+          },
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus"
+              },
+              "editorMode": "code",
+              "expr": "1000 * histogram_quantile(0.5, sum by (le) (rate(request_latency_seconds_bucket[5m])))",
+              "legendFormat": "p50",
+              "refId": "A"
+            }
+          ],
+          "title": "p50 Latency",
+          "type": "stat"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "decimals": 2,
+              "unit": "percentunit"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 4,
+            "w": 6,
+            "x": 6,
+            "y": 5
+          },
+          "id": 6,
+          "options": {
+            "colorMode": "value",
+            "graphMode": "area",
+            "justifyMode": "auto",
+            "orientation": "auto",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "textMode": "auto"
+          },
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus"
+              },
+              "editorMode": "code",
+              "expr": "avg(up{namespace=\"mailgate\",service=\"mailgate-server\"})",
+              "legendFormat": "availability",
+              "refId": "A"
+            }
+          ],
+          "title": "Availability",
+          "type": "stat"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "decimals": 2,
+              "unit": "short"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 4,
+            "w": 6,
+            "x": 12,
+            "y": 5
+          },
+          "id": 7,
+          "options": {
+            "colorMode": "value",
+            "graphMode": "area",
+            "justifyMode": "auto",
+            "orientation": "auto",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "textMode": "auto"
+          },
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus"
+              },
+              "editorMode": "code",
+              "expr": "sum(rate(container_cpu_usage_seconds_total{namespace=\"mailgate\",pod=~\"mailgate-server-.*\",container=\"mailgate-server\"}[5m]))",
+              "legendFormat": "cpu",
+              "refId": "A"
+            }
+          ],
+          "title": "CPU Usage (cores)",
+          "type": "stat"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "decimals": 2,
+              "unit": "bytes"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 4,
+            "w": 6,
+            "x": 18,
+            "y": 5
+          },
+          "id": 8,
+          "options": {
+            "colorMode": "value",
+            "graphMode": "area",
+            "justifyMode": "auto",
+            "orientation": "auto",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "textMode": "auto"
+          },
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus"
+              },
+              "editorMode": "code",
+              "expr": "sum(container_memory_working_set_bytes{namespace=\"mailgate\",pod=~\"mailgate-server-.*\",container=\"mailgate-server\"})",
+              "legendFormat": "memory",
+              "refId": "A"
+            }
+          ],
+          "title": "Memory Working Set",
+          "type": "stat"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "fieldConfig": {
+            "defaults": {
               "unit": "short"
             },
             "overrides": []
@@ -226,9 +418,9 @@ data:
             "h": 7,
             "w": 12,
             "x": 0,
-            "y": 5
+            "y": 9
           },
-          "id": 5,
+          "id": 9,
           "options": {
             "legend": {
               "calcs": [
@@ -274,9 +466,9 @@ data:
             "h": 7,
             "w": 12,
             "x": 12,
-            "y": 5
+            "y": 9
           },
-          "id": 6,
+          "id": 10,
           "options": {
             "legend": {
               "calcs": [
@@ -310,7 +502,7 @@ data:
               "editorMode": "code",
               "expr": "1000 * histogram_quantile(0.99, sum by (le) (rate(request_latency_seconds_bucket[5m])))",
               "legendFormat": "p99",
-              "refId": "A"
+              "refId": "B"
             }
           ],
           "title": "Latency Trend",
@@ -323,7 +515,8 @@ data:
           },
           "fieldConfig": {
             "defaults": {
-              "unit": "short"
+              "decimals": 2,
+              "unit": "percentunit"
             },
             "overrides": []
           },
@@ -331,9 +524,9 @@ data:
             "h": 7,
             "w": 12,
             "x": 0,
-            "y": 12
+            "y": 16
           },
-          "id": 7,
+          "id": 11,
           "options": {
             "legend": {
               "calcs": [
@@ -355,7 +548,7 @@ data:
                 "uid": "prometheus"
               },
               "editorMode": "code",
-              "expr": "sum by (method) (rate(request_count[5m]))",
+              "expr": "sum by (method) (rate(request_count{error!=\"ok\"}[5m])) / sum by (method) (rate(request_count[5m]))",
               "legendFormat": "{{method}}",
               "refId": "A"
             }
@@ -379,9 +572,9 @@ data:
             "h": 7,
             "w": 12,
             "x": 12,
-            "y": 12
+            "y": 16
           },
-          "id": 8,
+          "id": 12,
           "options": {
             "legend": {
               "calcs": [
@@ -431,6 +624,6 @@ data:
       "timezone": "browser",
       "title": "Mailgate Overview",
       "uid": "mailgate-overview",
-      "version": 3,
+      "version": 4,
       "weekStart": ""
     }

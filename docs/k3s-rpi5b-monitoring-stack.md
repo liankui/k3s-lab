@@ -118,6 +118,10 @@ curl http://127.0.0.1:31103/metrics
 - `Error Rate`
 - `p95 Latency`
 - `p99 Latency`
+- `p50 Latency`
+- `Availability`
+- `CPU Usage (cores)`
+- `Memory Working Set`
 - `Request Rate Trend`
 - `Latency Trend`
 - `Request Rate by Method`

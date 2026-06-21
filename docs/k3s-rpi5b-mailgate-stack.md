@@ -145,6 +145,7 @@ histogram_quantile(0.95, sum by (le, method) (rate(request_latency_seconds_bucke
 这个 dashboard 现在按“运维总览”排版：
 
 - 顶部 4 个指标卡：`Request Rate`、`Error Rate`、`p95 Latency`、`p99 Latency`
+- 第二行 4 个辅助卡：`p50 Latency`、`Availability`、`CPU Usage (cores)`、`Memory Working Set`
 - 中间 2 张趋势图：`Request Rate Trend`、`Latency Trend`
 - 底部 2 张方法维度图：`Request Rate by Method`、`Error Rate by Method`
 

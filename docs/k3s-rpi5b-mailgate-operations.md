@@ -73,6 +73,10 @@ request_latency_seconds
 - `Error Rate`
 - `p95 Latency`
 - `p99 Latency`
+- `p50 Latency`
+- `Availability`
+- `CPU Usage (cores)`
+- `Memory Working Set`
 - `Request Rate Trend`
 - `Latency Trend`
 - `Request Rate by Method`
