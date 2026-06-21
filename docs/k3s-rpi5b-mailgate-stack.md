@@ -107,7 +107,59 @@ API 同源路径是：
 
 这个路径由 `mailgate-data` PVC 持久化，所以 Pod 重建后数据不会直接丢失。
 
-### 8. 变更与同步
+### 8. 指标接入
+
+`mailgate-server` 的 `debug` 端口是 `31103`，它已经暴露了 `/metrics`。
+
+这份仓库里的 `examples/mailgate-app/base/servicemonitor.yaml` 会把这个端点接到 Prometheus：
+
+- `ServiceMonitor` 放在 `mailgate` namespace
+- 使用 `release: monitoring` 让 `kube-prometheus-stack` 发现它
+- 通过 `mailgate-server` Service 的 `debug` 端口抓取 `/metrics`
+
+如果你想先直接看应用指标，可以这样查：
+
+```bash
+kubectl -n mailgate port-forward svc/mailgate-server 31103:31103
+curl http://127.0.0.1:31103/metrics
+```
+
+如果你想在 Prometheus 里看接入结果，可以直接搜这些查询：
+
+```text
+up{namespace="mailgate",service="mailgate-server"}
+request_count
+request_latency_seconds
+```
+
+如果要看接口延迟分布，常用的查询是：
+
+```text
+histogram_quantile(0.95, sum by (le, method) (rate(request_latency_seconds_bucket[5m])))
+```
+
+### 9. Grafana Dashboard
+
+这份仓库里的 `examples/mailgate-app/base/mailgate-dashboard.yaml` 会把 `Mailgate Overview` 面板自动导入 Grafana。
+
+这个 dashboard 现在按“运维总览”排版：
+
+- 顶部 4 个指标卡：`Request Rate`、`Error Rate`、`p95 Latency`、`p99 Latency`
+- 中间 2 张趋势图：`Request Rate Trend`、`Latency Trend`
+- 底部 2 张方法维度图：`Request Rate by Method`、`Error Rate by Method`
+
+页面现在按 Grafana 的整宽 24 栅格铺开，第一屏不会再只占左半边。
+
+打开 Grafana 后，直接在 `Dashboards` 里搜索 `Mailgate Overview`，或者在 `Explore` 里用同样的 PromQL 继续排障。
+
+如果 dashboard 里看起来“没有数据”，先按这个顺序排：
+
+1. 在 Grafana 右上角把时间范围切到 `Last 6 hours` 或更大
+2. 先查 `up{namespace="mailgate",service="mailgate-server"}`，确认目标已经被抓到
+3. 再查 `sum(rate(request_count[5m]))`，确认最近 5 分钟内确实有请求
+4. 如果 `up=1` 但面板还是空，通常是最近没有流量，或者刚切完指标后还没积累出 5 分钟窗口
+
+### 10. 变更与同步
 
 后续如果你改了 `examples/mailgate-app/base/` 下的任意 YAML，按这个顺序复用：
 
@@ -121,7 +173,7 @@ API 同源路径是：
 kubectl annotate application mailgate -n argocd argocd.argoproj.io/refresh=hard --overwrite
 ```
 
-### 9. 清理
+### 11. 清理
 
 ```bash
 kubectl delete application mailgate -n argocd

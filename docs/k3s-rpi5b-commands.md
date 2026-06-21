@@ -73,6 +73,23 @@ argocd app diff mailgate
 argocd app sync mailgate
 ```
 
+### 8. Mailgate 指标
+
+```bash
+kubectl -n mailgate port-forward svc/mailgate-server 31103:31103
+curl http://127.0.0.1:31103/metrics
+```
+
+Prometheus 里常用查询：
+
+```text
+up{namespace="mailgate",service="mailgate-server"}
+request_count
+request_latency_seconds
+```
+
+Grafana 里的固定 dashboard 名称是 `Mailgate Overview`。
+
 ## 命名速查
 
 ### 1. 常见 Kubernetes 资源简称

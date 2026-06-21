@@ -78,6 +78,60 @@ helm uninstall monitoring -n monitoring
 kubectl delete namespace monitoring
 ```
 
+### 7. 查看业务指标
+
+`mailgate-server` 现在已经通过 `ServiceMonitor` 接入 Prometheus。
+
+在 Prometheus 里最直接的查看方式是打开查询页，然后输入：
+
+```text
+up{namespace="mailgate",service="mailgate-server"}
+```
+
+如果要看请求量和延迟：
+
+```text
+request_count
+request_latency_seconds
+```
+
+如果要看 95 分位延迟：
+
+```text
+histogram_quantile(0.95, sum by (le, method) (rate(request_latency_seconds_bucket[5m])))
+```
+
+如果你更想先看原始端点，也可以在树莓派上跑：
+
+```bash
+sudo k3s kubectl -n mailgate port-forward svc/mailgate-server 31103:31103
+curl http://127.0.0.1:31103/metrics
+```
+
+如果你习惯在 Grafana 里看，打开 `http://grafana.rpi5b.local`，进 `Explore`，把上面的 PromQL 直接贴进去就行。
+
+现在仓库已经给 `mailgate` 预置了固定 dashboard，名字是 `Mailgate Overview`，在 Grafana 里打开 `Dashboards` 后直接搜索这个名字即可。
+
+这个页面的第一屏是运维总览，顺序是：
+
+- `Request Rate`
+- `Error Rate`
+- `p95 Latency`
+- `p99 Latency`
+- `Request Rate Trend`
+- `Latency Trend`
+- `Request Rate by Method`
+- `Error Rate by Method`
+
+如果你想继续排障，`Explore` 还是最灵活的方式。
+
+如果 dashboard 为空，不要先怀疑 `ServiceMonitor`，按下面顺序排：
+
+1. 先看 `up{namespace="mailgate",service="mailgate-server"}`
+2. 再看 `request_count`
+3. 如果 `up=1` 但没有时序，通常是最近没有业务请求，或者时间范围太短
+4. 如果 `up` 都没有，再回头查 `ServiceMonitor`、`Service` 标签和 `debug` 端口
+
 ## 常用命令
 
 ```bash

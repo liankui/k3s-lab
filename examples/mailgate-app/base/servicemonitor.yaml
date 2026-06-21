@@ -1,0 +1,19 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: mailgate-server
+  namespace: mailgate
+  labels:
+    release: monitoring
+spec:
+  namespaceSelector:
+    matchNames:
+      - mailgate
+  selector:
+    matchLabels:
+      app: mailgate-server
+  endpoints:
+    - port: debug
+      path: /metrics
+      interval: 30s
+      scrapeTimeout: 10s

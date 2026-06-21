@@ -43,7 +43,47 @@ API 路径前缀是：
 /mailgate/v1
 ```
 
-### 5. 同步更新
+### 5. 查看指标
+
+先直接看应用端点：
+
+```bash
+kubectl -n mailgate port-forward svc/mailgate-server 31103:31103
+curl http://127.0.0.1:31103/metrics
+```
+
+如果你要确认 Prometheus 是否已经接到这个目标，可以查：
+
+```text
+up{namespace="mailgate",service="mailgate-server"}
+```
+
+如果要看业务指标，优先找这两个名字：
+
+```text
+request_count
+request_latency_seconds
+```
+
+如果你想看固定面板，打开 Grafana 后搜索 `Mailgate Overview`。
+
+这个页面的第一屏现在是运维总览，顺序是：
+
+- `Request Rate`
+- `Error Rate`
+- `p95 Latency`
+- `p99 Latency`
+- `Request Rate Trend`
+- `Latency Trend`
+- `Request Rate by Method`
+- `Error Rate by Method`
+
+如果这里看起来没有数据，先确认两件事：
+
+1. `up{namespace="mailgate",service="mailgate-server"}` 是否为 `1`
+2. 最近 5 分钟内是否真的有请求量，也就是 `sum(rate(request_count[5m]))` 是否大于 `0`
+
+### 6. 同步更新
 
 如果 Git 里改了 `examples/mailgate-app/base/`：
 
@@ -53,14 +93,14 @@ git -C /tmp/k3s-lab-mirror.git update-server-info
 kubectl annotate application mailgate -n argocd argocd.argoproj.io/refresh=hard --overwrite
 ```
 
-### 6. 回滚
+### 7. 回滚
 
 ```bash
 argocd app history mailgate
 argocd app rollback mailgate <id>
 ```
 
-### 7. 清理
+### 8. 清理
 
 ```bash
 kubectl delete application mailgate -n argocd

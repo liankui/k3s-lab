@@ -3,6 +3,9 @@ kind: Service
 metadata:
   name: mailgate-server
   namespace: mailgate
+  labels:
+    app: mailgate-server
+    app.kubernetes.io/name: mailgate-server
 spec:
   selector:
     app: mailgate-server

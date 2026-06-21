@@ -1,5 +1,3 @@
 metrics:
-  enable: false
-  department: your_department
-  group: your_group
-  project: mailgate
+  enable: true
+  namespace: mailgate
