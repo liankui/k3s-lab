@@ -6,6 +6,7 @@ resources:
   - pvc.yaml
   - backend-deployment.yaml
   - backend-service.yaml
+  - alerts.yaml
   - servicemonitor.yaml
   - mailgate-dashboard.yaml
   - frontend-deployment.yaml

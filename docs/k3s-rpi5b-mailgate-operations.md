@@ -87,7 +87,22 @@ request_latency_seconds
 1. `up{namespace="mailgate",service="mailgate-server"}` 是否为 `1`
 2. 最近 5 分钟内是否真的有请求量，也就是 `sum(rate(request_count[5m]))` 是否大于 `0`
 
-### 6. 同步更新
+### 6. 查看告警
+
+如果你要看 `mailgate` 的告警规则是否已经加载，可以查：
+
+```bash
+kubectl get prometheusrule -n mailgate
+kubectl describe prometheusrule mailgate-alerts -n mailgate
+```
+
+如果要看 Prometheus 端已经触发了什么，可以用：
+
+```text
+ALERTS{namespace="mailgate"}
+```
+
+### 7. 同步更新
 
 如果 Git 里改了 `examples/mailgate-app/base/`：
 
@@ -97,14 +112,14 @@ git -C /tmp/k3s-lab-mirror.git update-server-info
 kubectl annotate application mailgate -n argocd argocd.argoproj.io/refresh=hard --overwrite
 ```
 
-### 7. 回滚
+### 8. 回滚
 
 ```bash
 argocd app history mailgate
 argocd app rollback mailgate <id>
 ```
 
-### 8. 清理
+### 9. 清理
 
 ```bash
 kubectl delete application mailgate -n argocd

@@ -54,6 +54,7 @@ prometheus:
 
 alertmanager:
   enabled: true
+  # TODO: add alertmanager.config with receivers/route once the notification target is decided.
 
 nodeExporter:
   enabled: true

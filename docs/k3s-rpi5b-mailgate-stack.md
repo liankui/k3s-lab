@@ -160,7 +160,35 @@ histogram_quantile(0.95, sum by (le, method) (rate(request_latency_seconds_bucke
 3. 再查 `sum(rate(request_count[5m]))`，确认最近 5 分钟内确实有请求
 4. 如果 `up=1` 但面板还是空，通常是最近没有流量，或者刚切完指标后还没积累出 5 分钟窗口
 
-### 10. 变更与同步
+### 10. 告警规则
+
+`examples/mailgate-app/base/alerts.yaml` 里已经预置了 `mailgate` 的基础告警规则。
+
+当前这 3 条最值得先看：
+
+- `MailgateDown`: `mailgate-server` 连续 5 分钟抓不到
+- `MailgateHighErrorRate`: 非 `ok` 请求占比连续 10 分钟高于 5%
+- `MailgateHighP95Latency`: `p95` 延迟连续 10 分钟高于 500ms
+
+这些规则通过 `release: monitoring` 标签被 `kube-prometheus-stack` 发现，不需要再手动把规则塞进 Prometheus。
+
+如果你要加新规则，直接在 `examples/mailgate-app/base/alerts.yaml` 里追加 `rules` 即可，常见模板还是：
+
+```yaml
+- alert: MailgateSomethingBad
+  expr: <PromQL>
+  for: 10m
+  labels:
+    severity: warning
+    app: mailgate
+  annotations:
+    summary: short human summary
+    description: longer explanation
+```
+
+如果你还想把告警推到邮箱、Slack 或微信，需要再在 `docs/k3s-rpi5b-monitoring-values.yaml` 里配置 Alertmanager 的 receiver 和 route。当前仓库还没写死通知目标，所以这里先留空，等你决定收件方式再补。
+
+### 11. 变更与同步
 
 后续如果你改了 `examples/mailgate-app/base/` 下的任意 YAML，按这个顺序复用：
 
@@ -174,7 +202,7 @@ histogram_quantile(0.95, sum by (le, method) (rate(request_latency_seconds_bucke
 kubectl annotate application mailgate -n argocd argocd.argoproj.io/refresh=hard --overwrite
 ```
 
-### 11. 清理
+### 12. 清理
 
 ```bash
 kubectl delete application mailgate -n argocd

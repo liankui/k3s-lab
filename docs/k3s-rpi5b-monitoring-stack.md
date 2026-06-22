@@ -78,7 +78,31 @@ helm uninstall monitoring -n monitoring
 kubectl delete namespace monitoring
 ```
 
-### 7. 查看业务指标
+### 7. 查看告警
+
+`alertmanager` 在这套 values 里已经启用，所以基础告警链路是通的。
+
+先看当前有没有 firing 的规则：
+
+```text
+ALERTS{namespace="mailgate"}
+```
+
+如果你想看 Alertmanager 自己的界面，可以在树莓派上跑：
+
+```bash
+sudo k3s kubectl -n monitoring port-forward svc/monitoring-alertmanager 9093:9093
+```
+
+然后打开：
+
+```text
+http://127.0.0.1:9093
+```
+
+如果你要把告警发到邮箱、Slack、WeCom 或 webhook，需要继续在 `docs/k3s-rpi5b-monitoring-values.yaml` 里补 `alertmanager.config` 的 route / receiver。当前仓库只把告警引擎打开了，还没有写死外部通知目标。
+
+### 8. 查看业务指标
 
 `mailgate-server` 现在已经通过 `ServiceMonitor` 接入 Prometheus。
 
